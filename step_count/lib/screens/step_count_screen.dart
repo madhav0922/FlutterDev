@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import '../screens/avatar_screen.dart';
 import '../models/question_answer.dart';
 import '../widgets/progress_bar.dart';
-import '../widgets/question_item.dart';
+import '../widgets/question_list.dart';
 import '../widgets/answer_item.dart';
 
 class StepCountScreen extends StatefulWidget {
@@ -67,17 +67,6 @@ class _StepCountScreenState extends State<StepCountScreen> {
         child: Column(
           children: <Widget>[
             //Progress Bar and Avatar
-            // Container(
-            //   padding: EdgeInsets.symmetric(horizontal: 10),
-            //   height: mediaQuery.size.height * 0.1,
-            // Container(
-            //   width: double.infinity,
-            // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            // child: Card(
-            // child: Padding(
-            //   padding: const EdgeInsets.all(20),
-            //),
-            //),
             Container(
               height: mediaQuery.size.height * 0.12,
               child: Card(
