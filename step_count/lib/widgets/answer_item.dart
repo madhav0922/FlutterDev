@@ -1,35 +1,41 @@
-import 'dart:io';
-import 'dart:math';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 
 class AnswerItem extends StatefulWidget {
-  final int numberAsAnswer;
-  final int questionStep;
+  //Color buttonColor = Colors.blue;
+  final correctAnswerKey;
+  final List<int> answersShown;
   final Function filledQuestionsHandler;
-  Color buttonColor = Colors.blue;
-  final correctAnswerKey = Random().nextInt(4);
+  final List<Color> buttonColor = [
+    Colors.blue,
+    Colors.blue,
+    Colors.blue,
+    Colors.blue,
+  ];
 
   AnswerItem(
-      this.numberAsAnswer, this.questionStep, this.filledQuestionsHandler);
+      this.correctAnswerKey, this.answersShown, this.filledQuestionsHandler);
 
   @override
   _AnswerItemState createState() => _AnswerItemState();
 }
 
 class _AnswerItemState extends State<AnswerItem> {
-  void _checkAnswer(int i, int correctAnswerKey, Color buttonColor) {
-    if (i == correctAnswerKey) {
-      widget.filledQuestionsHandler();
+  void _updateAnswer() {
+    widget.filledQuestionsHandler();
+  }
+
+  void _checkAnswer(int i) {
+    if (i == widget.correctAnswerKey) {
       setState(() {
-        buttonColor = Colors.green;
-        // sleep(Duration(seconds: 1));
+        widget.buttonColor[i] = Colors.green;
       });
     } else
-      print('Wrong answer!');
-    // setState(() {
-    //   buttonColor = Colors.red;
-    // });
+      setState(() {
+        widget.buttonColor[i] = Colors.red;
+      });
+    Timer(Duration(milliseconds: 500), _updateAnswer);
   }
 
   @override
@@ -46,22 +52,19 @@ class _AnswerItemState extends State<AnswerItem> {
         return ClipRRect(
           borderRadius: BorderRadius.circular(25),
           child: FlatButton(
-            color: (index == widget.correctAnswerKey)
-                ? widget.buttonColor
-                : Theme.of(context).primaryColor,
-            splashColor: (index != widget.correctAnswerKey)
-                ? widget.buttonColor
-                : Theme.of(context).primaryColor,
-            key: ValueKey(index),
-            onPressed: () => _checkAnswer(
-                index, widget.correctAnswerKey, widget.buttonColor),
+            color: widget.buttonColor[index],
+            // splashColor: (index != widget.correctAnswerKey)
+            //     ? widget.buttonColor
+            //     : Theme.of(context).primaryColor,
+            onPressed: () => _checkAnswer(index),
             child: Text(
-              (index == widget.correctAnswerKey)
-                  ? '${widget.numberAsAnswer}'
-                  : (widget.numberAsAnswer -
-                          (widget.questionStep * 3) +
-                          Random().nextInt(widget.questionStep * 3))
-                      .toString(),
+              widget.answersShown[index].toString(),
+              // (index == widget.correctAnswerKey)
+              //     ? '${widget.numberAsAnswer}'
+              //     : (widget.numberAsAnswer -
+              //             (widget.questionStep * 3) +
+              //             Random().nextInt(widget.questionStep * 3))
+              //         .toString(),
               style: Theme.of(context).textTheme.headline6,
               textAlign: TextAlign.center,
             ),

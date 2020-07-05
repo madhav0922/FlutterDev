@@ -10,16 +10,17 @@ class QuestionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('filledq $_filledQuestions');
     // print(number);
     // print(step);
     // print(noOfQuestions);
     // print(filledQuestions);
+    print('len ${_qaList[0].answers.length}');
     return Container(
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
+          print('filledq $_filledQuestions');
           print('i $index');
           return Row(
             children: <Widget>[

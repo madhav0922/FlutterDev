@@ -27,12 +27,12 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: StepCountScreen(),
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        accentColor: Colors.white,
+        primarySwatch: Colors.grey,
+        accentColor: Colors.black,
         textTheme: ThemeData.light().textTheme.copyWith(
               headline6: TextStyle(
-                color: Colors.blue,
-                fontSize: 50,
+                color: Colors.white,
+                fontSize: 30,
               ),
             ),
       ),

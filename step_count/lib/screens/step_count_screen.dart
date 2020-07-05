@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,8 @@ class StepCountScreen extends StatefulWidget {
 
   List<QuestionAnswerItem> qa = QuestionAnswer().generateQuestionAnswer();
   int filledQuestions = 2 + Random().nextInt(2);
+  final List<int> answerOptions = [];
+  final correctAnswerKey = Random().nextInt(4);
   @override
   _StepCountScreenState createState() => _StepCountScreenState();
 }
@@ -34,16 +37,34 @@ class _StepCountScreenState extends State<StepCountScreen> {
 
   void _updateFilledQuestions() {
     setState(() {
-      if (widget.filledQuestions <= widget.qa[0].answers.length)
-        widget.filledQuestions++;
+      if (widget.filledQuestions < widget.qa[0].answers.length)
+        ++widget.filledQuestions;
+      print('filled ${widget.filledQuestions}');
     });
+  }
+
+  void _generateAnswerOptions(int numberAsAnswer, int step) {
+    print('crkey ${widget.correctAnswerKey}');
+    int i;
+    for (i = 0; i < 4; i++) {
+      if (i == widget.correctAnswerKey)
+        widget.answerOptions.insert(i, numberAsAnswer);
+      else
+        widget.answerOptions.insert(
+          i,
+          (numberAsAnswer - step * 2) + Random().nextInt(step * 5),
+        );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    print('filled ${widget.filledQuestions}');
+    final numberAsAnswer = widget.qa[0].answers[widget.filledQuestions].answer;
+    final step = widget.qa[0].questions[0].step;
+    _generateAnswerOptions(numberAsAnswer, step);
+
     if (widget.filledQuestions == widget.qa[0].questions[0].noOfQuestions)
-      _changeQuestion();
+      Timer(Duration(seconds: 1), _changeQuestion);
     final mediaQuery = MediaQuery.of(context);
     final PreferredSizeWidget appBar = (Platform.isIOS)
         ? CupertinoNavigationBar(
@@ -108,16 +129,13 @@ class _StepCountScreenState extends State<StepCountScreen> {
               ),
             ),
             // Answers
-            if (widget.filledQuestions <
-                widget.qa[0].questions[0].noOfQuestions)
+            if (widget.filledQuestions < widget.qa[0].answers.length)
               Container(
                 height: mediaQuery.size.height * 0.25,
                 // only margin separation between two widgets
                 margin: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                child: AnswerItem(
-                    widget.qa[0].answers[widget.filledQuestions].answer,
-                    widget.qa[0].questions[0].step,
+                child: AnswerItem(widget.correctAnswerKey, widget.answerOptions,
                     _updateFilledQuestions),
               ),
 
