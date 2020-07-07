@@ -22,7 +22,7 @@ class Question {
 
     final number = minN + Random().nextInt(maxN - minN);
     final step = minS + Random().nextInt(maxS - minS);
-    final noOfQuestions = 4 + Random().nextInt(3);
+    final noOfQuestions = 5 + Random().nextInt(2);
 
     _questionList.add(
       QuestionItem(

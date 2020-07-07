@@ -19,7 +19,7 @@ class QuestionList extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
+        itemBuilder: (ctx, index) {
           print('filledq $_filledQuestions');
           print('i $index');
           return Row(
@@ -37,7 +37,7 @@ class QuestionList extends StatelessWidget {
                         fit: BoxFit.cover,
                         child: Text(
                           '${_qaList[0].answers[index].answer}',
-                          style: TextStyle(color: Colors.white, fontSize: 60),
+                          style: Theme.of(context).textTheme.headline6,
                         ),
                       ),
                     ),
@@ -60,7 +60,7 @@ class QuestionList extends StatelessWidget {
             ],
           );
         },
-        itemCount: _qaList[0].answers.length,
+        itemCount: _qaList[0].questions[0].noOfQuestions,
       ),
       //   ),
       // //Answers

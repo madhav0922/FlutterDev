@@ -15,7 +15,10 @@ class AnswerItem extends StatefulWidget {
   ];
 
   AnswerItem(
-      this.correctAnswerKey, this.answersShown, this.filledQuestionsHandler);
+    this.correctAnswerKey,
+    this.answersShown,
+    this.filledQuestionsHandler,
+  );
 
   @override
   _AnswerItemState createState() => _AnswerItemState();
@@ -53,9 +56,7 @@ class _AnswerItemState extends State<AnswerItem> {
           borderRadius: BorderRadius.circular(25),
           child: FlatButton(
             color: widget.buttonColor[index],
-            // splashColor: (index != widget.correctAnswerKey)
-            //     ? widget.buttonColor
-            //     : Theme.of(context).primaryColor,
+            //splashColor: widget.buttonColor[index],
             onPressed: () => _checkAnswer(index),
             child: Text(
               widget.answersShown[index].toString(),
@@ -65,7 +66,7 @@ class _AnswerItemState extends State<AnswerItem> {
               //             (widget.questionStep * 3) +
               //             Random().nextInt(widget.questionStep * 3))
               //         .toString(),
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.bodyText2,
               textAlign: TextAlign.center,
             ),
           ),

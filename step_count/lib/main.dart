@@ -1,17 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import './screens/step_count_screen.dart';
 import './screens/avatar_screen.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-void initState() {
+void main() {
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.dumpErrorToConsole(details);
+    if (kReleaseMode) exit(1);
+  };
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
@@ -21,8 +21,7 @@ void initState() {
   });
 }
 
-class _MyAppState extends State<MyApp> {
-  @override
+class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: StepCountScreen(),
@@ -31,6 +30,13 @@ class _MyAppState extends State<MyApp> {
         accentColor: Colors.black,
         textTheme: ThemeData.light().textTheme.copyWith(
               headline6: TextStyle(
+                color: Colors.white,
+                fontSize: 50,
+              ),
+              headline5: TextStyle(
+                fontSize: 50,
+              ),
+              bodyText2: TextStyle(
                 color: Colors.white,
                 fontSize: 30,
               ),
