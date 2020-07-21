@@ -26,9 +26,28 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: StepCountScreen(),
       theme: ThemeData(
-        primarySwatch: Colors.grey,
+        brightness: Brightness.light,
+        primarySwatch: Colors.blue,
         accentColor: Colors.black,
         textTheme: ThemeData.light().textTheme.copyWith(
+              headline6: TextStyle(
+                color: Colors.white,
+                fontSize: 50,
+              ),
+              headline5: TextStyle(
+                fontSize: 50,
+              ),
+              bodyText2: TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+              ),
+            ),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.grey,
+        accentColor: Colors.black,
+        textTheme: ThemeData.dark().textTheme.copyWith(
               headline6: TextStyle(
                 color: Colors.white,
                 fontSize: 50,

@@ -7,6 +7,7 @@ class AnswerItem extends StatefulWidget {
   final correctAnswerKey;
   final List<int> answersShown;
   final Function filledQuestionsHandler;
+  final Function marksHandler;
   final List<Color> buttonColor = [
     Colors.blue,
     Colors.blue,
@@ -18,6 +19,7 @@ class AnswerItem extends StatefulWidget {
     this.correctAnswerKey,
     this.answersShown,
     this.filledQuestionsHandler,
+    this.marksHandler,
   );
 
   @override
@@ -33,10 +35,12 @@ class _AnswerItemState extends State<AnswerItem> {
     if (i == widget.correctAnswerKey) {
       setState(() {
         widget.buttonColor[i] = Colors.green;
+        widget.marksHandler(true);
       });
     } else
       setState(() {
         widget.buttonColor[i] = Colors.red;
+        widget.marksHandler(false);
       });
     Timer(Duration(milliseconds: 500), _updateAnswer);
   }
@@ -45,7 +49,7 @@ class _AnswerItemState extends State<AnswerItem> {
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount: 4,
         childAspectRatio: 9 / 1,
         crossAxisSpacing: 40,
         mainAxisSpacing: 10,

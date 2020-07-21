@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ProgressBar extends StatelessWidget {
+  final marks;
+  final totalMarks;
+
+  ProgressBar(this.marks, this.totalMarks);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -17,7 +22,7 @@ class ProgressBar extends StatelessWidget {
             ),
           ),
           FractionallySizedBox(
-            widthFactor: 0.7,
+            widthFactor: (marks / totalMarks),
             child: Container(
               height: 20,
               width: double.infinity,

@@ -18,7 +18,6 @@ class StepCountScreen extends StatefulWidget {
   //   Question(number: 3, step: 6),
   //   Question(number: 5, step: 5),
   // ];
-
   final List<int> answerOptions = [];
   @override
   _StepCountScreenState createState() => _StepCountScreenState();
@@ -26,13 +25,24 @@ class StepCountScreen extends StatefulWidget {
 
 class _StepCountScreenState extends State<StepCountScreen> {
   List<QuestionAnswerItem> qa = QuestionAnswer().generateQuestionAnswer();
-  int filledQuestions = 2 + Random().nextInt(2);
+  static int filledQuestions = 2 + Random().nextInt(2);
   int correctAnswerKey = Random().nextInt(4);
+  int marks = filledQuestions * 10;
+
+  void _marksHandler(bool answerType) {
+    if (answerType)
+      marks += 10;
+    else
+      marks += 5;
+    print('marks=$marks');
+  }
+
   void _changeQuestion() {
     setState(() {
       qa = QuestionAnswer().generateQuestionAnswer();
       filledQuestions = 2 + Random().nextInt(2);
       correctAnswerKey = Random().nextInt(4);
+      marks = filledQuestions * 10;
     });
   }
 
@@ -63,12 +73,15 @@ class _StepCountScreenState extends State<StepCountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (filledQuestions < qa[0].questions[0].noOfQuestions) {
+    print('marksinbuild=$marks');
+    final questionsLength = qa[0].questions[0].noOfQuestions;
+    final totalMarks = questionsLength * 10;
+    if (filledQuestions < questionsLength) {
       final numberAsAnswer = qa[0].answers[filledQuestions].answer;
       final step = qa[0].questions[0].step;
       _generateAnswerOptions(numberAsAnswer, step);
     }
-    if (filledQuestions == qa[0].questions[0].noOfQuestions)
+    if (filledQuestions == questionsLength)
       Timer(Duration(milliseconds: 500), _changeQuestion);
 
     final PreferredSizeWidget appBar = (Platform.isIOS)
@@ -105,7 +118,7 @@ class _StepCountScreenState extends State<StepCountScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Expanded(
-                      child: ProgressBar(),
+                      child: ProgressBar(marks, totalMarks),
                     ),
                     IconButton(
                       splashColor: Theme.of(context).primaryColor,
@@ -117,51 +130,59 @@ class _StepCountScreenState extends State<StepCountScreen> {
                 ),
               ),
             ),
-            Card(
-              child: Column(
-                children: <Widget>[
-                  //Question List
+
+            Column(
+              children: <Widget>[
+                //Question List
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 2, horizontal: 40),
+                  height: mediaQueryHeight * 0.3,
+                  width: MediaQuery.of(context).size.width,
+                  // will cause renderflex if not included width.
+                  //alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Colors.black,
+                      )),
+                  // child: SingleChildScrollView(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 2),
+                  //   scrollDirection: Axis.horizontal,
+                  child: Center(
+                    child: QuestionList(filledQuestions, qa),
+                  ),
+                  //),
+                ),
+                Container(
+                  height: mediaQueryHeight * 0.08,
+                  margin: EdgeInsets.only(top: 10),
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      'Choose an Answer: ',
+                      style: TextStyle(
+                        fontSize: 50,
+                        color: Colors.black,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                // Answers
+                if (filledQuestions < questionsLength)
                   Container(
-                    margin: EdgeInsets.symmetric(vertical: 2),
                     height: mediaQueryHeight * 0.3,
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(horizontal: 2),
-                      scrollDirection: Axis.horizontal,
-                      child: QuestionList(filledQuestions, qa),
+                    // only margin separation between two widgets
+                    margin: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    child: AnswerItem(
+                      correctAnswerKey,
+                      widget.answerOptions,
+                      _updateFilledQuestions,
+                      _marksHandler,
                     ),
                   ),
-                  Container(
-                    height: mediaQueryHeight * 0.08,
-                    margin: EdgeInsets.only(top: 10),
-                    child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: Text(
-                        'Choose an Answer: ',
-                        style: TextStyle(
-                          fontSize: 50,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                  // Answers
-                  if (filledQuestions < qa[0].answers.length)
-                    Container(
-                      height: mediaQueryHeight * 0.3,
-                      // only margin separation between two widgets
-                      margin:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 50),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                      child: AnswerItem(
-                        correctAnswerKey,
-                        widget.answerOptions,
-                        _updateFilledQuestions,
-                      ),
-                    ),
-                ],
-              ),
+              ],
             ),
           ],
         ),
