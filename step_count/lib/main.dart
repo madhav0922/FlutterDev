@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import './screens/home_screen.dart';
 import './screens/step_count_screen.dart';
 import './screens/avatar_screen.dart';
 
@@ -24,7 +25,7 @@ void main() {
 class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: StepCountScreen(),
+      home: HomeScreen(),
       theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.blue,
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         AvatarScreen.routeName: (ctx) => AvatarScreen(),
+        StepCountScreen.routeName: (ctx) => StepCountScreen(),
       },
     );
   }

@@ -35,14 +35,14 @@ class _AnswerItemState extends State<AnswerItem> {
     if (i == widget.correctAnswerKey) {
       setState(() {
         widget.buttonColor[i] = Colors.green;
-        widget.marksHandler(true);
+        widget.marksHandler();
+        Timer(Duration(milliseconds: 700), _updateAnswer);
       });
     } else
       setState(() {
         widget.buttonColor[i] = Colors.red;
-        widget.marksHandler(false);
+        //widget.marksHandler(false);
       });
-    Timer(Duration(milliseconds: 500), _updateAnswer);
   }
 
   @override
@@ -50,7 +50,7 @@ class _AnswerItemState extends State<AnswerItem> {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
-        childAspectRatio: 9 / 1,
+        childAspectRatio: 9 / 3,
         crossAxisSpacing: 40,
         mainAxisSpacing: 10,
       ),

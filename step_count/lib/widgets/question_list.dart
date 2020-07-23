@@ -24,18 +24,18 @@ class QuestionList extends StatelessWidget {
           children: <Widget>[
             if (index < _filledQuestions)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: CircleAvatar(
                   radius: 60,
-                  backgroundColor: Colors.lightGreenAccent,
+                  backgroundColor: Theme.of(context).primaryColor,
                   child: CircleAvatar(
-                    radius: 44,
-                    backgroundColor: Theme.of(context).primaryColor,
+                    radius: 45,
+                    backgroundColor: Colors.lightGreenAccent,
                     child: FittedBox(
                       fit: BoxFit.cover,
                       child: Text(
                         '${_qaList[0].answers[index].answer}',
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context).textTheme.headline5,
                       ),
                     ),
                   ),
@@ -43,7 +43,7 @@ class QuestionList extends StatelessWidget {
               ),
             if (index >= _filledQuestions)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                padding: const EdgeInsets.symmetric(vertical: 30.0),
                 child: CircleAvatar(
                   child: null,
                   radius: 60,

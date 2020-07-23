@@ -18,6 +18,7 @@ class StepCountScreen extends StatefulWidget {
   //   Question(number: 3, step: 6),
   //   Question(number: 5, step: 5),
   // ];
+  static const routeName = 'step-count';
   final List<int> answerOptions = [];
   @override
   _StepCountScreenState createState() => _StepCountScreenState();
@@ -29,12 +30,13 @@ class _StepCountScreenState extends State<StepCountScreen> {
   int correctAnswerKey = Random().nextInt(4);
   int marks = filledQuestions * 10;
 
-  void _marksHandler(bool answerType) {
-    if (answerType)
-      marks += 10;
-    else
-      marks += 5;
-    print('marks=$marks');
+  void _marksHandler() {
+    //bool answerType) {
+    //if (answerType)
+    marks += 10;
+    // else
+    //   marks += 5;
+    // print('marks=$marks');
   }
 
   void _changeQuestion() {
@@ -86,7 +88,7 @@ class _StepCountScreenState extends State<StepCountScreen> {
 
     final PreferredSizeWidget appBar = (Platform.isIOS)
         ? CupertinoNavigationBar(
-            middle: Text('Step Count'),
+            middle: Text('Easy'),
             // trailing: IconButton(
             //   splashColor: Theme.of(context).primaryColor,
             //   icon: Icon(Icons.person),
@@ -96,7 +98,7 @@ class _StepCountScreenState extends State<StepCountScreen> {
           )
         : AppBar(
             title: Center(
-              child: Text('Step Count'),
+              child: Text('Easy'),
             ),
           );
 
@@ -135,16 +137,17 @@ class _StepCountScreenState extends State<StepCountScreen> {
               children: <Widget>[
                 //Question List
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 2, horizontal: 40),
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 50),
                   height: mediaQueryHeight * 0.3,
                   width: MediaQuery.of(context).size.width,
                   // will cause renderflex if not included width.
                   //alignment: Alignment.center,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: Colors.black,
-                      )),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Color.fromRGBO(0, 186, 255, 1),
+                    ),
+                  ),
                   // child: SingleChildScrollView(
                   //   padding: const EdgeInsets.symmetric(horizontal: 2),
                   //   scrollDirection: Axis.horizontal,
@@ -154,12 +157,12 @@ class _StepCountScreenState extends State<StepCountScreen> {
                   //),
                 ),
                 Container(
-                  height: mediaQueryHeight * 0.08,
-                  margin: EdgeInsets.only(top: 10),
+                  height: mediaQueryHeight * 0.1,
+                  margin: EdgeInsets.only(top: 15, bottom: 10),
                   child: FittedBox(
                     fit: BoxFit.contain,
                     child: Text(
-                      'Choose an Answer: ',
+                      'Hop to the next number: ',
                       style: TextStyle(
                         fontSize: 50,
                         color: Colors.black,
@@ -171,7 +174,7 @@ class _StepCountScreenState extends State<StepCountScreen> {
                 // Answers
                 if (filledQuestions < questionsLength)
                   Container(
-                    height: mediaQueryHeight * 0.3,
+                    height: mediaQueryHeight * 0.2,
                     // only margin separation between two widgets
                     margin: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
                     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
