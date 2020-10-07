@@ -54,7 +54,7 @@ class HomeScreen extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Container(
-            height: mediaQuery.size.height * 0.35,
+            height: mediaQuery.size.height * 0.3,
             margin: EdgeInsets.symmetric(vertical: 5),
             child: Center(
               child: FittedBox(

@@ -23,31 +23,62 @@ class QuestionList extends StatelessWidget {
         return Row(
           children: <Widget>[
             if (index < _filledQuestions)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: CircleAvatar(
-                  radius: 60,
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: CircleAvatar(
-                    radius: 45,
-                    backgroundColor: Colors.lightGreenAccent,
-                    child: FittedBox(
-                      fit: BoxFit.cover,
-                      child: Text(
-                        '${_qaList[0].answers[index].answer}',
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Stack(
+                      fit: StackFit.loose,
+                      alignment: Alignment.center,
+                      children: <Widget>[
+                        Container(
+                          // width: 100,
+                          // height: 100,
+                          child: AnimatedOpacity(
+                            opacity: 0.5,
+                            duration: Duration(seconds: 1),
+                            child: Image.asset(
+                              'assets/images/gear.png',
+                              color: Colors.green,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: FittedBox(
+                            fit: BoxFit.cover,
+                            child: Text(
+                              '${_qaList[0].answers[index].answer}',
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+                    // ),
+                    // ),
                   ),
                 ),
               ),
             if (index >= _filledQuestions)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30.0),
-                child: CircleAvatar(
-                  child: null,
-                  radius: 60,
-                  backgroundColor: Theme.of(context).primaryColor,
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                // width: 100,
+                // height: 100,
+                child: AnimatedOpacity(
+                  opacity: 0.5,
+                  duration: Duration(seconds: 1),
+                  child: Image.asset(
+                    'assets/images/gear.png',
+                    color: Colors.blue,
+                    width: 70,
+                    height: 70,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             // if (index == filledQuestions)
