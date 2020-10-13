@@ -76,8 +76,34 @@ class Products with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  void addProduct() {
-    //add data
+  void addProduct(Product product) {
+    //add a product
+    final prod = Product(
+      id: DateTime.now()
+          .toString(), // since our product does not have a id, in edit_products_screen.
+      title: product.title,
+      price: product.price,
+      description: product.description,
+      imageUrl: product.imageUrl,
+    );
+    _items.add(prod);
+    //_items.insert(0, prod); // or to insert at beginning.
+    notifyListeners();
+  }
+
+  void updateProduct(String id, Product newProduct) {
+    final prodIndex = _items.indexWhere((prod) => prod.id == id);
+    if (prodIndex >= 0) {
+      _items[prodIndex] = newProduct;
+      notifyListeners();
+    }
+    // this if check will prevent trying to update products which we don't have.
+    else
+      print('...');
+  }
+
+  void deleteProduct(String id) {
+    _items.removeWhere((prod) => prod.id == id);
     notifyListeners();
   }
 }

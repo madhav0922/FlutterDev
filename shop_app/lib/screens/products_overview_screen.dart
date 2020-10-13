@@ -56,11 +56,12 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           Consumer<Cart>(
             builder: (context, cart, ch) {
               return Badge(
-                child: ch,
+                child: ch, //mapped here
                 value: cart.itemCount.toString(),
               );
             },
             child: IconButton(
+              // this child will not rebuild as it is mapped to the consumer property 'child'
               icon: Icon(Icons.shopping_cart),
               onPressed: () =>
                   Navigator.of(context).pushNamed(CartScreen.routeName),
