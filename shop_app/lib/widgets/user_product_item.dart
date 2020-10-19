@@ -13,6 +13,7 @@ class UserProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffold = Scaffold.of(context);
     return ListTile(
       title: Text(title),
       leading: CircleAvatar(
@@ -41,15 +42,29 @@ class UserProductItem extends StatelessWidget {
                     content: Text('This will delete the item forever.'),
                     actions: [
                       FlatButton(
-                        onPressed: () {
-                          Provider.of<Products>(context, listen: false)
-                              .deleteProduct(id);
-                          Navigator.of(context).pop(true);
-                        },
                         child: Text('YES'),
+                        onPressed: () async {
+                          try {
+                            Navigator.of(ctx).pop(true);
+                            // pop this first as await will also return a future.
+                            await Provider.of<Products>(context, listen: false)
+                                .deleteProduct(id);
+                          } catch (error) {
+                            scaffold.showSnackBar(
+                              // gives error here that, Looking up a deactivated widget's ancestor is unsafe, hence take scaffold up.
+                              SnackBar(
+                                content: Text(
+                                  'Could not delete item.',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+                          }
+                          //Navigator.of(ctx).pop(true);
+                        },
                       ),
                       FlatButton(
-                        onPressed: () => Navigator.of(context).pop(false),
+                        onPressed: () => Navigator.of(ctx).pop(false),
                         child: Text('NO'),
                       ),
                     ],

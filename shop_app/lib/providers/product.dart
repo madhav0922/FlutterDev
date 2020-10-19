@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
 class Product with ChangeNotifier {
   final String id;
@@ -17,8 +20,40 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  void toggleFavoriteStatus() {
+  void _setFavValue(bool newValue) {
+    isFavorite = newValue;
+    notifyListeners();
+  }
+
+  Future<void> toggleFavoriteStatus() async {
+    // OPTIMISTIC UPDATING
+    final oldStatus = isFavorite; // BACKUP
     isFavorite = !isFavorite;
     notifyListeners(); // kind of like setState
+    final url =
+        'https://bankinterestrates-fa81e.firebaseio.com/products/$id.json';
+    // TRY TO SEND PATCH
+    try {
+      // THIS WONT WORK THOUGH if an error occurs, since,
+      // for patch,put and delete, http package dont send error.
+      final response = await http.patch(url,
+          body: json.encode({
+            'isFavorite': isFavorite,
+          }));
+      // WE HAVE KEPT THIS TRY CATCH LOGIC HERE ANYWAY, since,
+      // any network error may occur.
+      if (response.statusCode >= 400) {
+        // isFavorite = oldStatus;
+        // notifyListeners();
+        // Code duplication tha so switched to function.
+        _setFavValue(oldStatus);
+      }
+    } catch (error) {
+      // IF ANY ERROR RESTORE STATUS
+      // isFavorite = oldStatus;
+      // notifyListeners();
+      // Code duplication tha so switched to function.
+      _setFavValue(oldStatus);
+    }
   }
 }
