@@ -83,7 +83,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
               if (dataSnapshot.error != null) {
                 // do error handling stuff..
                 return Center(
-                  child: Text('An error occurred!'),
+                  child: Text('An error occurred!!'),
                 );
               } else {
                 return Consumer<Orders>(
