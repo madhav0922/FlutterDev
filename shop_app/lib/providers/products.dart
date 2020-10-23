@@ -67,6 +67,10 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
+  final String authToken;
+  final String userId;
+  Products(this.authToken, this.userId, this._items);
+
   // LOCAL WIDGET FILTERING LOGIC
   List<Product> get items {
     return [..._items];
@@ -81,14 +85,24 @@ class Products with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  Future<void> fetchAndSetProducts() async {
-    const url = 'https://bankinterestrates-fa81e.firebaseio.com/products.json';
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    // [bool filterByUser = false] adding [] these, makes it an optional argument.
+    final filterPatch =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : null;
+    var url =
+        'https://bankinterestrates-fa81e.firebaseio.com/products.json?auth=$authToken&$filterPatch';
+    // notice the & between two string interpolations, deliberatly kept there.
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       // dont write map here in place of dynamic as flutter wont take it. xD
       if (extractedData == null) return;
       // dont execute further if there are no orders to avoid errors.
+      url =
+          'https://bankinterestrates-fa81e.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final favoriteResponse = await http.get(url);
+      final favoriteData = json.decode(favoriteResponse.body);
+      // print(json.decode(favoriteResponse.body));
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData) {
         // for each to iterate through each key that firebase provides in its map (response).
@@ -99,7 +113,8 @@ class Products with ChangeNotifier {
           price: prodData['price'],
           description: prodData['description'],
           imageUrl: prodData['imageUrl'],
-          isFavorite: prodData['isFavorite'],
+          isFavorite: favoriteData == null ? false : favoriteData[prodId],
+          // isFavorite: prodData['isFavorite'],
         ));
         _items = loadedProducts;
         notifyListeners();
@@ -111,7 +126,8 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     //add a product
-    const url = 'https://bankinterestrates-fa81e.firebaseio.com/products.json';
+    final url =
+        'https://bankinterestrates-fa81e.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.post(
         // stored into response because it returns a result, i.e a firebase object.
@@ -122,7 +138,8 @@ class Products with ChangeNotifier {
           'price': product.price,
           'description': product.description,
           'imageUrl': product.imageUrl,
-          'isFavorite': product.isFavorite,
+          'creatorId': userId, // we have it at the top.
+          // 'isFavorite': product.isFavorite, // no longer needed
         }),
       );
       // in async there is no need of .then as the code outside will automatically be treated like .then() future ,as follows..
@@ -154,7 +171,7 @@ class Products with ChangeNotifier {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
       final url =
-          'https://bankinterestrates-fa81e.firebaseio.com/products/$id.json';
+          'https://bankinterestrates-fa81e.firebaseio.com/products/$id.json?auth=$authToken';
       // targetting a specific product.
       try {
         await http.patch(
@@ -179,7 +196,7 @@ class Products with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     final url =
-        'https://bankinterestrates-fa81e.firebaseio.com/products/$id.json';
+        'https://bankinterestrates-fa81e.firebaseio.com/products/$id.json?auth=$authToken';
     // optimistic updating rather than deleting
     // how?
     //first copy, for in case any error occurs, we can restore the product.

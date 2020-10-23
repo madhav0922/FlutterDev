@@ -25,23 +25,27 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus() async {
+  Future<void> toggleFavoriteStatus(String token, String userId) async {
     // OPTIMISTIC UPDATING
     final oldStatus = isFavorite; // BACKUP
     isFavorite = !isFavorite;
     notifyListeners(); // kind of like setState
     final url =
-        'https://bankinterestrates-fa81e.firebaseio.com/products/$id.json';
+        'https://bankinterestrates-fa81e.firebaseio.com/userFavorites/$userId/$id.json?auth=$token';
     // TRY TO SEND PATCH
     try {
       // THIS WONT WORK THOUGH if an error occurs, since,
       // for patch,put and delete, http package dont send error.
-      final response = await http.patch(url,
-          body: json.encode({
-            'isFavorite': isFavorite,
-          }));
+      // final response = await http.patch(url,
+      //     body: json.encode({
+      //       'isFavorite': isFavorite,
+      //     })); // THIS CHANGED since now we are managing favorite status accn to user, using http.put().
+      // What is the diff? the diff is that all the products marked by a user are now under a single
+      // entry of respective userId, rather than redundant userIds.
       // WE HAVE KEPT THIS TRY CATCH LOGIC HERE ANYWAY, since,
       // any network error may occur.
+      final response = await http.put(url,
+          body: json.encode(isFavorite)); //  CHANGED TO this
       if (response.statusCode >= 400) {
         // isFavorite = oldStatus;
         // notifyListeners();

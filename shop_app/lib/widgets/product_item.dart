@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../screens/product_detail_screen.dart';
 import '../providers/product.dart';
 import '../providers/cart.dart';
+import '../providers/auth.dart';
 
 class ProductItem extends StatelessWidget {
   // final String id;
@@ -19,6 +20,7 @@ class ProductItem extends StatelessWidget {
     // build the hold widget tree again... see ALTERNATIVE SYNTAX 1 BELOW
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context);
+    final authData = Provider.of<Auth>(context);
     // print('build fn rebuilds');
     // you will see that this will print, only first time or when build actually rebuilds but not when favorite is clicked.
     return ClipRRect(
@@ -55,7 +57,9 @@ class ProductItem extends StatelessWidget {
                 color: Theme.of(context).accentColor,
                 // label: child, // suppose there is a label then child can be referred to that label and will not change.
                 // the child written below will be referenced here.
-                onPressed: () => product.toggleFavoriteStatus(),
+                onPressed: () => product.toggleFavoriteStatus(
+                    authData.token, authData.userId),
+                // token retrieved using provider.
               );
             },
             // child: Text('Never changes!'), // This will be referenced to the child item above and will not be rebuilt since it is outside of the builder function.

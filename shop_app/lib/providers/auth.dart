@@ -1,29 +1,39 @@
+import 'dart:async';
 import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+
 import '../models/http_exception.dart';
 
 class Auth with ChangeNotifier {
   String _token;
   DateTime _expiryDate;
   String _userId;
+  Timer _authTimer;
 
   bool get isAuth {
     return _token != null;
   }
 
   String get token {
-    if (_token != null ||
-        _expiryDate != null ||
+    if (_token != null &&
+        _expiryDate != null &&
         _expiryDate.isAfter(DateTime.now())) {
       return _token;
-    } 
+    }
     return null;
+  }
+
+  String get userId {
+    return _userId;
   }
 
   Future<void> _authenticate(
       String email, String password, String urlSegment) async {
-    final url = 'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyCR94_INIRO2_ThuIYx-3sy8aqeKdAX_Es';
+    final url =
+        'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyCR94_INIRO2_ThuIYx-3sy8aqeKdAX_Es';
     try {
       final response = await http.post(
         url,
@@ -40,10 +50,28 @@ class Auth with ChangeNotifier {
       // updating auth data on successful login..
       // all these keys, can be glanced from FIREBASE AUTH REST API.
       _token = responseData['idToken'];
-      _expiryDate = DateTime.now()
-          .add(Duration(seconds: int.parse(responseData['expiresIn'])));
       _userId = responseData['localId'];
+      _expiryDate = DateTime.now().add(
+        Duration(
+          seconds: int.parse(
+            responseData['expiresIn'],
+          ),
+        ),
+      );
+      _autoLogout();
+      // As here the user has successfully logged in,
+      // therefore, logout should also be called here.
       notifyListeners();
+      // after all this, we want to store the data, using shared preferences.
+      final prefs = await SharedPreferences.getInstance();
+      final userData = json.encode(
+        {
+          'token': _token,
+          'userId': _userId,
+          'expiryDate': _expiryDate.toIso8601String(),
+        },
+      );
+      prefs.setString('userData', userData);
     } catch (error) {
       throw error;
     }
@@ -55,5 +83,50 @@ class Auth with ChangeNotifier {
 
   Future<void> login(String email, String password) async {
     return _authenticate(email, password, 'signInWithPassword');
+  }
+
+  Future<bool> tryAutoLogin() async {
+    // returns a boolean future, whether we were
+    // successful to auto login the user or not.
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      return false;
+    }
+    final extractedUserData =
+        json.decode(prefs.getString('userData')) as Map<String, Object>;
+    final expiryDate = DateTime.parse(extractedUserData['expiryDate']);
+    if (expiryDate.isBefore(DateTime.now())) {
+      return false;
+    }
+    _token = extractedUserData['token'];
+    _userId = extractedUserData['userId'];
+    _expiryDate = expiryDate;
+    notifyListeners();
+    _autoLogout();
+    return true;
+  }
+
+  Future<void> logout() async {
+    _token = null;
+    _userId = null;
+    _expiryDate = null;
+    if (_authTimer != null) {
+      _authTimer.cancel();
+      _authTimer = null;
+    }
+    notifyListeners();
+    // anomaly was observed when logging out until this was added..
+    final prefs = await SharedPreferences.getInstance();
+    // prefs.remove('userData'); // use if you are also managing some other data,
+    // with shared preferences that you don't want to delete.
+    prefs.clear(); // removes all data
+  }
+
+  void _autoLogout() {
+    if (_authTimer != null) {
+      _authTimer.cancel();
+    }
+    final timeToExpiry = _expiryDate.difference(DateTime.now()).inSeconds;
+    _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
   }
 }
