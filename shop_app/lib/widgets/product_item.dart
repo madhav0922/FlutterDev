@@ -34,9 +34,20 @@ class ProductItem extends StatelessWidget {
               arguments: product.id,
             );
           },
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: product.id,
+            // Hero widget takes a unique tag, in order to identify image or whatever you want to animate.
+            // tag can take any tag you want it to have, just a unique identifier is preffered ofc.
+            child: FadeInImage(
+              placeholder: AssetImage('assets/images/product-placeholder.png'),
+              image: NetworkImage(
+                product.imageUrl,
+              ),
+              fit: BoxFit.cover,
+              // Earlier this was used.
+              // Image.network(
+              //   product.imageUrl,
+            ),
           ),
         ),
         footer: GridTileBar(

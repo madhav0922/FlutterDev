@@ -19,39 +19,59 @@ class ProductDetailScreen extends StatelessWidget {
     // i also wonder that if price refreshes then what will happen..because that should be loaded.
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Product Details'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            height: 300,
-            width: double.infinity,
-            child: Image.network(
-              loadedProduct.imageUrl,
-              fit: BoxFit.cover,
+      // appBar: AppBar(
+      //   title: Text(loadedProduct.title),
+      // ),
+      body: // if many things are scrolling on the same page individually then use CustomScrollView.
+          CustomScrollView(
+        slivers: // means scrollable things/widgets
+            [
+          SliverAppBar(
+            expandedHeight: 300,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(loadedProduct.title),
+              background: Hero(
+                tag: loadedProduct.id,
+                // Also need to implement hero widget
+                // to the screen where it will lead.
+                child: Image.network(
+                  loadedProduct.imageUrl,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-            '\$${loadedProduct.price}',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 20,
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
-            width: double.infinity,
-            child: Text(
-              '${loadedProduct.description}',
-              textAlign: TextAlign.center,
-              softWrap: true,
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  '\$${loadedProduct.price}',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  width: double.infinity,
+                  child: Text(
+                    '${loadedProduct.description}',
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                  ),
+                ),
+                SizedBox(
+                  height: 800,
+                ),
+              ],
             ),
           )
         ],
