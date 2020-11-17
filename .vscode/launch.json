@@ -5,6 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "chat_app",
+            "cwd": "chat_app",
+            "type": "dart",
+            "request": "launch",
+        },
+        {
             "name": "MealsApp",
             "cwd": "MealsApp",
             "request": "launch",

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "567566550726",
+    "firebase_url": "https://bankinterestrates-fa81e.firebaseio.com",
+    "project_id": "bankinterestrates-fa81e",
+    "storage_bucket": "bankinterestrates-fa81e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567566550726:android:7e14ac5c42133a75bbf9c7",
+        "android_client_info": {
+          "package_name": "com.example.chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "567566550726-93vmdfkvabhm04ra01or508jsj9j2ptr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq0m2x21pgflSjc3ERjAv4BRLTk66Phew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "567566550726-93vmdfkvabhm04ra01or508jsj9j2ptr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
