@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../widgets/chat/messages.dart';
+import '../widgets/chat/new_message.dart';
 
 class ChatScreen extends StatelessWidget {
   @override
@@ -36,36 +38,46 @@ class ChatScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('chats/vbAvliL55hiXtzzv1j9R/messages')
-            .snapshots(),
-        builder: (ctx, streamSnapshot) {
-          if (streamSnapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          final docs = streamSnapshot.data.docs;
-          return ListView.builder(
-            itemCount: streamSnapshot.data.docs.length,
-            itemBuilder: (ctx, index) => Container(
-              padding: const EdgeInsets.all(8),
-              child: Text(docs[index]['text']),
+      body: Container(
+        child: Column(
+          children: [
+            Expanded(
+              child: Messages(),
             ),
-          );
-        },
+            NewMessage(),
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          FirebaseFirestore.instance
-              .collection('chats/vbAvliL55hiXtzzv1j9R/messages')
-              .add({
-            'text': 'This was added by clicking the add button!',
-          });
-        },
-      ),
+      // body: StreamBuilder(
+      //   stream: FirebaseFirestore.instance
+      //       .collection('chats/vbAvliL55hiXtzzv1j9R/messages')
+      //       .snapshots(),
+      //   builder: (ctx, streamSnapshot) {
+      //     if (streamSnapshot.connectionState == ConnectionState.waiting) {
+      //       return Center(
+      //         child: CircularProgressIndicator(),
+      //       );
+      //     }
+      //     final docs = streamSnapshot.data.docs;
+      //     return ListView.builder(
+      //       itemCount: streamSnapshot.data.docs.length,
+      //       itemBuilder: (ctx, index) => Container(
+      //         padding: const EdgeInsets.all(8),
+      //         child: Text(docs[index]['text']),
+      //       ),
+      //     );
+      //   },
+      // ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(Icons.add),
+      //   onPressed: () {
+      //     FirebaseFirestore.instance
+      //         .collection('chats/vbAvliL55hiXtzzv1j9R/messages')
+      //         .add({
+      //       'text': 'This was added by clicking the add button!',
+      //     });
+      //   },
+      // ),
     );
   }
 }
