@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import '../pickers/user_image_picker.dart';
 
 class AuthForm extends StatefulWidget {
   AuthForm(
@@ -11,6 +14,7 @@ class AuthForm extends StatefulWidget {
     String email,
     String username,
     String password,
+    File image,
     bool isLogin,
     BuildContext ctx,
   ) submitFn;
@@ -28,11 +32,26 @@ class _AuthFormState extends State<AuthForm> {
   var _userEmail = '';
   var _userName = '';
   var _userPassword = '';
+  File _userImageFile;
+
+  void _pickedImage(File image) {
+    _userImageFile = image;
+  }
 
   void _trySubmit() {
     final isValid = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
     // Removes keyboard away when submit is pressed.
+
+    if (_userImageFile == null && !_isLogin) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('PLease pick an Image'),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
+      return;
+    }
 
     if (isValid) {
       _formKey.currentState.save();
@@ -46,6 +65,7 @@ class _AuthFormState extends State<AuthForm> {
         _userName.trim(),
         _userPassword.trim(),
         // trim() eliminates white spaces at start and end.
+        _userImageFile,
         _isLogin,
         context,
       );
@@ -65,6 +85,7 @@ class _AuthFormState extends State<AuthForm> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  if (!_isLogin) UserImagePicker(_pickedImage),
                   TextFormField(
                     key: ValueKey('email'),
                     // solves the issue where password will jump
